@@ -1,0 +1,10 @@
+# SYNTHETIC DATA. Fictional fund, account and counterparties. See design/breaks.md.
+break_id,account_ref,break_date,counterparty,payment_ref,ledger_amount_eur,statement_amount_eur,break_amount_eur,direction,description
+B1,GGF-EUR-001,2026-10-08,Ashcombe Partners,ASH-77310,10000.00,9975.00,25.00,short,Incoming payment credited EUR 25.00 below the amount expected
+B2,GGF-EUR-001,2026-10-08,Fenmoor Securities,FEN-4402,45000.00,44687.60,312.40,short,USD receipt converted to EUR credited EUR 312.40 below the amount expected
+B3,GGF-EUR-001,2026-10-08,Fenmoor Securities,FEN-4407,18500.00,0.00,18500.00,short,Expected receipt not on the statement
+B4,GGF-EUR-001,2026-10-08,Ashcombe Partners,ASH-77318,50000.00,100000.00,50000.00,excess,Payment received twice; statement shows EUR 50000.00 more than expected
+B5,GGF-EUR-001,2026-10-08,Fenmoor Securities,FEN-4410,30000.00,28800.00,1200.00,short,Settlement credited EUR 1200.00 below the amount expected
+B6,GGF-EUR-001,2026-10-08,Ashcombe Partners,ASH-77412,25000.00,20250.00,4750.00,short,Incoming payment credited EUR 4750.00 below the amount expected
+B7,GGF-EUR-001,2026-10-08,Larkspire Bank,LRK-2291,12000.00,11100.00,900.00,short,Incoming payment credited EUR 900.00 below the amount expected
+B8,GGF-EUR-001,2026-10-08,Ashcombe Partners,ASH-77355,8000.00,7960.00,40.00,short,Incoming payment credited EUR 40.00 below the amount expected

@@ -1,0 +1,11 @@
+# SYNTHETIC DATA. Fictional fund, account and counterparties. See design/breaks.md.
+evidence_id,received_at,from_party,channel,subject,body
+E1,2026-10-08T10:12:00,Larkspire Bank,bank notice,Charges on incoming payment ASH-77310,Charges of EUR 25.00 have been deducted from incoming payment ASH-77310 credited to account GGF-EUR-001 on 8 October 2026.
+E2,2026-10-08T11:40:00,Calderwick Custody,statement note,FX conversion FEN-4402,USD 52284.49 received from Fenmoor Securities under FEN-4402 was converted at 1.1700 and credited as EUR 44687.60 to account GGF-EUR-001. At the indicative rate of 1.1619 the credit would have been EUR 45000.00; the difference is EUR 312.40.
+E3,2026-10-08T14:05:00,Fenmoor Securities,email,Settlement FEN-4407 value date,Settlement FEN-4407 of EUR 18500.00 to account GGF-EUR-001 will now value 9 October 2026 due to a late instruction on our side.
+E4,2026-10-08T15:20:00,Ashcombe Partners,email,Duplicate payment ASH-77318,We sent EUR 50000.00 under ASH-77318 to account GGF-EUR-001 twice in error on 8 October 2026. Please return the duplicate payment.
+E5,2026-10-08T09:30:00,Fenmoor Securities,email,Commission on FEN-4410,A commission of EUR 1200.00 was deducted from settlement FEN-4410 to account GGF-EUR-001.
+E6,2026-10-08T16:45:00,Fenmoor Securities,email,Correction: commission on FEN-4410,Correction: the commission deducted from settlement FEN-4410 to account GGF-EUR-001 was EUR 1020.00.
+E7,2026-10-08T12:15:00,Larkspire Bank,bank notice,Charges on incoming payment LRK-2291,Charges of EUR 900.00 have been deducted from incoming payment LRK-2291 credited to account GGF-EUR-002 on 8 October 2026.
+E8,2026-10-08T13:02:00,Larkspire Bank,bank notice,Charges on incoming payment ASH-77355,Charges of EUR 25.00 have been deducted from incoming payment ASH-77355 credited to account GGF-EUR-001 on 8 October 2026.
+E9,2026-10-08T08:00:00,Calderwick Custody,email,Monthly statement available,Your September 2026 statement for account GGF-EUR-001 is now available in the client portal.
