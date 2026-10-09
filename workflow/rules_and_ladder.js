@@ -4,6 +4,13 @@ const pkgs = $('Build the question').all();
 const evidence = $('Evidence inbox').all().map(i => i.json);
 const byId = Object.fromEntries(evidence.map(e => [e.evidence_id, e]));
 const runId = $('Build the question').first().json.run_id;
+// Fix after Rob's test (9 Oct): a break that already has a chaser out (draft or sent) does not get a second
+// automatic chaser. The follow-up is a person's call.
+const alreadyChased = new Set($('Chasers already out').all().map(i => i.json)
+  .filter(c => c.break_id && ['draft', 'sent'].includes(c.status)).map(c => c.break_id));
+// Fix after Rob's test (9 Oct): record who each source is really from, so the reviewer sees the sender,
+// not the agent's summary of it.
+const label = id => byId[id] ? `${id} · ${byId[id].from_party} · ${byId[id].channel}` : `${id} · not in the inbox`;
 
 function aiText(j) {
   if (typeof j === 'string') return j;
@@ -92,6 +99,10 @@ $input.all().forEach((aiItem, i) => {
     rung = 'R5'; who = 'reviewer'; status = 'awaiting_review';
     reason = 'Explanation fully supported by the evidence. Reviewer approves, amends or overrides.';
   }
+  if (chaser != null && alreadyChased.has(b.break_id)) {
+    chaser = null; who = 'human_only'; status = 'with_person';
+    reason = reason.replace(/ Chaser drafted.*$/, '') + ' Already chased: nothing since explains it, so a person follows up instead of a second automatic chaser.';
+  }
   const behaviour = { R0: 'no_proposal', R1: 'no_proposal', R2: 'stopped_by_rules', R3: 'proposes_partial', R4: 'proposes_supported', R5: 'proposes_supported' }[rung];
   const category = rung === 'R0' ? 'no_evidence' : rung === 'R1' ? 'conflict' : (passing[0] || checked[0] || {}).category || 'other';
   const first = passing[0] || checked[0] || {};
@@ -102,6 +113,8 @@ $input.all().forEach((aiItem, i) => {
     quote: first.quote || '', explained_amount_eur: explained, unexplained_amount_eur: chaser != null ? chaser : Math.max(unexplained, 0),
     checks: JSON.stringify(checked), failed_check: ai.parse_error ? 'agent_output_unreadable' : failed.map(f => `${f.evidence_id}:${f.fails.join('|')}`).join('; '),
     set_aside: setAside.map(s => s.evidence_id).join(','),
+    sources: [checked.length ? 'Used: ' + checked.map(c => label(c.evidence_id)).join('; ') : 'Used: none',
+              setAside.length ? 'Set aside (does not mention this payment): ' + setAside.map(x => label(x.evidence_id)).join('; ') : ''].filter(Boolean).join(' | '),
     status, reason,
     chaser: chaser == null ? null : {
       chaser_id: `${runId}-${b.break_id}`, break_id: b.break_id, to_party: b.counterparty,

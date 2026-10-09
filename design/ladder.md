@@ -34,3 +34,8 @@ Who acts on each break. Read top to bottom, first match wins. The rung that fire
 
 - **Only a message that exists can be set aside.** Pass 1 showed an invented source (agent cites a message that is not in the inbox) was set aside as "another payment" and the break fell to R0. Now it fails `evidence_not_found` and goes to R2, a person.
 - **Amounts with thousands commas are read correctly.** "4,750.00" was unreadable to the amount check and sent a supported break to a person. The check still requires the exact amount to appear in the message.
+
+## Changes after Rob's live test (9 Oct 2026)
+
+- **No second automatic chaser.** A reply that explained nothing re-opened B8 and a duplicate EUR 15.00 chaser was drafted. Now a break that already has a chaser out (draft or sent) goes to a person instead: the follow-up is a relationship call. Break-it case 11 written before the fix.
+- **Sources show the real sender.** The agent's explanation said a reply came from Ashcombe when it was sent as Fenmoor. The rules never checked the agent's prose. Each proposal now records its sources with sender and channel from the inbox itself, and the review page shows those.
