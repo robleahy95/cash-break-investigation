@@ -1,0 +1,9 @@
+break_id,break_amount_eur,expected_rung,expected_who_acts,expected_category,expected_agent_behaviour,expected_chaser_amount_eur,note
+B1,25.00,R5,reviewer,bank_charge,proposes_supported,,Quote and amount check out
+B2,312.40,R5,reviewer,fx_difference,proposes_supported,,Quote and amount check out
+B3,18500.00,R5,reviewer,timing,proposes_supported,,Full expected receipt missing; evidence moves the value date to the next business day
+B4,50000.00,R4,human_signoff,duplicate,proposes_supported,,Explanation supported but resolution returns money; manual sign-off
+B5,1200.00,R1,human_only,conflict,no_proposal,,Two messages disagree; agent must not pick a side
+B6,4750.00,R0,chaser_then_human,no_evidence,no_proposal,4750.00,Chaser drafted for the full amount; demo loop closes it
+B7,900.00,R2,human_only,reference_mismatch,stopped_by_rules,,Agent may match on amount; reference check must stop it
+B8,40.00,R3,chaser_then_human,bank_charge_partial,proposes_partial,15.00,EUR 25.00 explained; chaser for EUR 15.00
