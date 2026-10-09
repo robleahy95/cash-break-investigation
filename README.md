@@ -1,6 +1,6 @@
 # The Break Chaser
 
-Investigating a cash reconciliation break usually means chasing someone: the bank, the custodian, the broker. Read the thread, chase, wait, chase again. Addetto names this pain on its homepage: operations teams spend too much time "checking outputs and reconstructing context" (https://addetto.ai).
+Investigating a cash reconciliation break usually means chasing someone: the bank, the custodian, the broker. Read the thread, chase, wait, chase again. Build to send to Karl in relation to Addetto.
 
 The Break Chaser is a small version of that loop, built in n8n to understand the problem properly. An agent reads the evidence behind each break and reports what it found, quoting the line it relied on. Rules check the agent. Where there is no evidence, it drafts a chaser. A person approves anything that leaves the system, every decision is logged, and approved decisions are kept as precedents for the next similar break.
 
