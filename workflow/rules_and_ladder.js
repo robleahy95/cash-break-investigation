@@ -1,9 +1,9 @@
 // Rules check the agent, then the step-in ladder. Runs once for all items.
-// Source of truth for the "Rules check the agent + step-in ladder" Code node in Workflow 1.
-const pkgs = $('Package each break with the inbox').all();
+// Source of truth: workflow/rules_and_ladder.js
+const pkgs = $('Build the question').all();
 const evidence = $('Evidence inbox').all().map(i => i.json);
 const byId = Object.fromEntries(evidence.map(e => [e.evidence_id, e]));
-const runId = $('Package each break with the inbox').first().json.run_id;
+const runId = $('Build the question').first().json.run_id;
 
 function aiText(j) {
   if (typeof j === 'string') return j;

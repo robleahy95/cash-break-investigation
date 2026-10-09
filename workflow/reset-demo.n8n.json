@@ -1,0 +1,266 @@
+{
+ "name": "Break Chaser: reset demo",
+ "settings": {
+  "executionOrder": "v1"
+ },
+ "connections": {
+  "Reset the demo": {
+   "main": [
+    [
+     {
+      "node": "Clear proposals",
+      "type": "main",
+      "index": 0
+     }
+    ]
+   ]
+  },
+  "Clear proposals": {
+   "main": [
+    [
+     {
+      "node": "Clear chaser outbox",
+      "type": "main",
+      "index": 0
+     }
+    ]
+   ]
+  },
+  "Clear chaser outbox": {
+   "main": [
+    [
+     {
+      "node": "Clear audit trail",
+      "type": "main",
+      "index": 0
+     }
+    ]
+   ]
+  },
+  "Clear audit trail": {
+   "main": [
+    [
+     {
+      "node": "Clear precedents",
+      "type": "main",
+      "index": 0
+     }
+    ]
+   ]
+  },
+  "Clear precedents": {
+   "main": [
+    [
+     {
+      "node": "Clear scorecard",
+      "type": "main",
+      "index": 0
+     }
+    ]
+   ]
+  },
+  "Clear scorecard": {
+   "main": [
+    [
+     {
+      "node": "Reopen all breaks",
+      "type": "main",
+      "index": 0
+     }
+    ]
+   ]
+  },
+  "Reopen all breaks": {
+   "main": [
+    [
+     {
+      "node": "Remove replies from inbox",
+      "type": "main",
+      "index": 0
+     }
+    ]
+   ]
+  }
+ },
+ "nodes": [
+  {
+   "id": "0f322212-6c70-4872-ad09-6cc162732281",
+   "name": "Reset the demo",
+   "type": "n8n-nodes-base.manualTrigger",
+   "typeVersion": 1,
+   "position": [
+    0,
+    0
+   ],
+   "parameters": {}
+  },
+  {
+   "id": "6f0c537c-9fc4-47a9-8492-b938d211fb2c",
+   "name": "Clear proposals",
+   "type": "n8n-nodes-base.dataTable",
+   "typeVersion": 1.1,
+   "position": [
+    240,
+    0
+   ],
+   "parameters": {
+    "resource": "table",
+    "operation": "clear",
+    "dataTableId": {
+     "__rl": true,
+     "mode": "id",
+     "value": "J5dzcHqmCoe9XgPX"
+    }
+   },
+   "executeOnce": true
+  },
+  {
+   "id": "2a562816-abf3-4ed6-a31a-2588ad2a40eb",
+   "name": "Clear chaser outbox",
+   "type": "n8n-nodes-base.dataTable",
+   "typeVersion": 1.1,
+   "position": [
+    480,
+    0
+   ],
+   "parameters": {
+    "resource": "table",
+    "operation": "clear",
+    "dataTableId": {
+     "__rl": true,
+     "mode": "id",
+     "value": "8CUaVo5g8InAFMKI"
+    }
+   },
+   "executeOnce": true
+  },
+  {
+   "id": "8a8c66f1-d543-417f-8474-53a8f2d7fe94",
+   "name": "Clear audit trail",
+   "type": "n8n-nodes-base.dataTable",
+   "typeVersion": 1.1,
+   "position": [
+    720,
+    0
+   ],
+   "parameters": {
+    "resource": "table",
+    "operation": "clear",
+    "dataTableId": {
+     "__rl": true,
+     "mode": "id",
+     "value": "AaZe22QfVwpzjZmW"
+    }
+   },
+   "executeOnce": true
+  },
+  {
+   "id": "171b3f3a-8672-4032-bda9-6a2edbb05296",
+   "name": "Clear precedents",
+   "type": "n8n-nodes-base.dataTable",
+   "typeVersion": 1.1,
+   "position": [
+    960,
+    0
+   ],
+   "parameters": {
+    "resource": "table",
+    "operation": "clear",
+    "dataTableId": {
+     "__rl": true,
+     "mode": "id",
+     "value": "JRznDPCV8VdthTnp"
+    }
+   },
+   "executeOnce": true
+  },
+  {
+   "id": "7b0d43af-551c-4890-8cea-9559ab859133",
+   "name": "Clear scorecard",
+   "type": "n8n-nodes-base.dataTable",
+   "typeVersion": 1.1,
+   "position": [
+    1200,
+    0
+   ],
+   "parameters": {
+    "resource": "table",
+    "operation": "clear",
+    "dataTableId": {
+     "__rl": true,
+     "mode": "id",
+     "value": "NNu95y5lb4iSoKSP"
+    }
+   },
+   "executeOnce": true
+  },
+  {
+   "id": "307e1353-8160-42a6-b4af-4e3e6f52a72a",
+   "name": "Reopen all breaks",
+   "type": "n8n-nodes-base.dataTable",
+   "typeVersion": 1.1,
+   "position": [
+    1440,
+    0
+   ],
+   "parameters": {
+    "resource": "row",
+    "operation": "update",
+    "dataTableId": {
+     "__rl": true,
+     "mode": "id",
+     "value": "piEGNCjRV2gJGLha"
+    },
+    "matchType": "allConditions",
+    "filters": {
+     "conditions": [
+      {
+       "keyName": "status",
+       "condition": "neq",
+       "keyValue": "open"
+      }
+     ]
+    },
+    "columns": {
+     "mappingMode": "defineBelow",
+     "value": {
+      "status": "open"
+     }
+    }
+   },
+   "executeOnce": true,
+   "alwaysOutputData": true
+  },
+  {
+   "id": "9d5f5dd6-fe35-4d06-9ee5-77afc3f49f8d",
+   "name": "Remove replies from inbox",
+   "type": "n8n-nodes-base.dataTable",
+   "typeVersion": 1.1,
+   "position": [
+    1680,
+    0
+   ],
+   "parameters": {
+    "resource": "row",
+    "operation": "deleteRows",
+    "dataTableId": {
+     "__rl": true,
+     "mode": "id",
+     "value": "1FlrgvIrSvuo6bET"
+    },
+    "matchType": "allConditions",
+    "filters": {
+     "conditions": [
+      {
+       "keyName": "evidence_id",
+       "condition": "like",
+       "keyValue": "R-%"
+      }
+     ]
+    }
+   },
+   "executeOnce": true,
+   "alwaysOutputData": true
+  }
+ ]
+}
