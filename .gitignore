@@ -1,0 +1,6 @@
+.env
+*.local.json
+CLAUDE.md
+MEMORY.md
+plan.*
+.DS_Store
