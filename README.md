@@ -42,6 +42,28 @@ The Break Chaser is a small version of that loop, built in n8n to understand the
 
 ![What happens next](screenshots/08-what-happens-next.png)
 
+## What each box on the canvas does
+
+| Box | In plain words |
+|---|---|
+| Run investigation | The start button |
+| Answer key (loaded first) | The right answers, written before any data existed, loaded first so every run can be marked |
+| Evidence inbox | Every message about the money: bank notices, statement notes, emails, replies |
+| Chasers already out | Messages already drafted or sent, so nobody gets chased twice for the same thing |
+| Open breaks | The money that does not add up and still needs looking at |
+| Build the question | Puts one problem and the whole inbox in front of the AI |
+| The agent reads the evidence | Claude reads the inbox and copies out what each relevant message says, word for word |
+| Rules check the agent + step-in ladder | Checks the AI's answer against the message itself, then decides who deals with it |
+| Score against the answer key, Save scorecard | Marks the run against the right answers |
+| Save proposals, Log to audit trail, Mark break investigated | Saves what was found, logs it, and marks the problem as looked at |
+| Needs a chaser?, Draft chaser (not sent) | Drafts a message when something is missing. A person approves before anything goes |
+| Reviewer: open a break | The form where a person picks a problem to review |
+| Latest proposal, Precedent | Pulls up what was found, and what was decided last time on a similar problem |
+| Decide | The page where the person chooses what to do and says why |
+| Record decision on proposal, Update break status, Log decision to audit trail, Decision logged | Writes the decision down everywhere it needs to go |
+| What happens next, Mark chaser sent, Save precedent | Marks an approved message as sent, and saves good decisions for next time |
+| Counterparty reply, Add reply to evidence inbox, Reopen the break | The other side answers, the answer joins the inbox, and the problem is looked at again |
+
 ## What it does
 
 Three lanes in one n8n workflow:
