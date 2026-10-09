@@ -29,3 +29,8 @@ Who acts on each break. Read top to bottom, first match wins. The rung that fire
 
 - **Unreadable agent output is R2**, never R0. In run 1 three answers were cut off and fell through to "no evidence". A failure must not look like an empty inbox.
 - **A message about a different payment reference is set aside and logged**, not escalated. The reference is the key. A message with the right reference but a wrong detail (B7) still fails the checks and goes to a person.
+
+## Changes after break-it pass 1 (9 Oct 2026, cases committed before the run)
+
+- **Only a message that exists can be set aside.** Pass 1 showed an invented source (agent cites a message that is not in the inbox) was set aside as "another payment" and the break fell to R0. Now it fails `evidence_not_found` and goes to R2, a person.
+- **Amounts with thousands commas are read correctly.** "4,750.00" was unreadable to the amount check and sent a supported break to a person. The check still requires the exact amount to appear in the message.

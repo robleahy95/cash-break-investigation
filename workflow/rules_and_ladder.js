@@ -25,7 +25,8 @@ function nextBusinessDay(iso) {
   do { d.setUTCDate(d.getUTCDate() + 1); } while ([0, 6].includes(d.getUTCDay()));
   return d.toISOString().slice(0, 10);
 }
-const eur = n => Number(n).toFixed(2);
+// Break-it fix 2: read amounts written with thousands commas (4,750.00) the same as 4750.00.
+const eur = n => Number(String(n).replace(/,/g, '')).toFixed(2);
 
 const out = [];
 $input.all().forEach((aiItem, i) => {
@@ -38,7 +39,9 @@ $input.all().forEach((aiItem, i) => {
   // Fix 3 (run 1): the payment reference is the key. A message about a different payment is not evidence
   // for this break. It is set aside and logged, not escalated. A message with the right reference but a
   // wrong detail still fails the checks below and goes to a person.
-  const setAside = items.filter(it => !(byId[it.evidence_id] && byId[it.evidence_id].body.includes(b.payment_ref)));
+  // Break-it fix 1: only a message that exists can be set aside. A cited message that does not exist
+  // stays in and fails evidence_not_found, so an invented source always reaches a person (R2).
+  const setAside = items.filter(it => byId[it.evidence_id] && !byId[it.evidence_id].body.includes(b.payment_ref));
   const relevant = items.filter(it => !setAside.includes(it));
   const checked = relevant.map(it => {
     const ev = byId[it.evidence_id];
@@ -55,7 +58,7 @@ $input.all().forEach((aiItem, i) => {
   const passing = checked.filter(c => c.fails.length === 0);
   const failed = checked.filter(c => c.fails.length > 0);
   const amounts = [...new Set(passing.map(c => eur(c.amount_eur)))];
-  const explained = passing.length ? Math.max(...passing.map(c => Number(c.amount_eur))) : 0;
+  const explained = passing.length ? Math.max(...passing.map(c => Number(eur(c.amount_eur)))) : 0;
   const unexplained = Math.round((Number(b.break_amount_eur) - explained) * 100) / 100;
   const moneyOut = b.direction === 'excess' || passing.some(c => /\b(return|recall|refund)\b/i.test(byId[c.evidence_id].body));
 
