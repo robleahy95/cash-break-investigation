@@ -20,3 +20,11 @@ A break is a difference between the custodian's cash statement and the fund's ow
 - Shared charges deducted from incoming payments (the SHA option): https://valyuz.com/knowledge-base/swift-payments-fees-our-and-sha
 - Fees, FX, timing, duplicates and reference mismatches as common causes of breaks: https://www.solvexia.com/blog/why-do-finance-reconciliations-keep-breaking
 - Recalls of duplicate payments, and that a return is not guaranteed: https://www.swift.com/node/57586 and https://stripe.com/fr-ca/resources/more/bacs-recall-requests
+
+## The scripted counterparty reply (B6), written before the reply lane was built
+
+Rob plays Ashcombe Partners on the reply form and sends:
+
+> We paid EUR 20250.00 under ASH-77412 to account GGF-EUR-001 because EUR 4750.00 was netted against your open invoice INV-2207.
+
+Expected after the agent re-reads B6: R5, reviewer approves (answer key row `B6-after-reply`). Netting a payment against an open invoice is a common reason for a short payment.

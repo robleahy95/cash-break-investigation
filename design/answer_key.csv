@@ -7,3 +7,4 @@ B5,1200.00,R1,human_only,conflict,no_proposal,,Two messages disagree; agent must
 B6,4750.00,R0,chaser_then_human,no_evidence,no_proposal,4750.00,Chaser drafted for the full amount; demo loop closes it
 B7,900.00,R2,human_only,reference_mismatch,stopped_by_rules,,Agent may match on amount; reference check must stop it
 B8,40.00,R3,chaser_then_human,bank_charge_partial,proposes_partial,15.00,EUR 25.00 explained; chaser for EUR 15.00
+B6-after-reply,4750.00,R5,reviewer,other,proposes_supported,,After the scripted Ashcombe reply (netting against invoice INV-2207) the reply quotes ASH-77412 GGF-EUR-001 and EUR 4750.00 so it is fully supported
