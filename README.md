@@ -1,6 +1,6 @@
 # Cash Break Investigation
 
-When a fund's cash does not match the bank, someone has to work out why: search the emails and bank notices, check the right payment, and chase the bank or counterparty when nothing explains it. Built to send to Karl in relation to Addetto. 
+When a fund's cash does not match the bank, someone has to work out why: search the emails and bank notices, check the right payment, and chase the bank or counterparty when nothing explains it. A test build for the "checking outputs and reconstructing context" side of that work.
 
 This is a small, working version of that loop, built in n8n. An AI reads the messages behind each break and quotes the line that explains it. Rules check that quote against the message itself. Where nothing explains the break, a chaser is drafted. A person approves every decision and every chaser, with a reason, and anything that sends money back needs a manual sign-off.
 
@@ -108,7 +108,7 @@ What the testing found:
 
 ## Scope
 
-**What it is:** a working demo of investigating and chasing cash breaks, with every decision made by a person. It is not a production system. It runs on clean test data, is not connected to real banks or email. For testing purposes. 
+**What it is:** a working demo of investigating and chasing cash breaks, with every decision made by a person. It is not a production system. It runs on clean test data and is not connected to real banks or email.
 
 **Example:** EUR 25.00 short on payment ASH-77310. By hand: search the inbox, find the bank notice, check it, record it, around 15 minutes (estimate). Here: the reviewer sees the quoted bank notice and the checks it passed, and approves it in under a minute.
 
