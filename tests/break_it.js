@@ -19,11 +19,12 @@ function csv(file) {
 const breaks = Object.fromEntries(csv('breaks.csv').map(b => [b.break_id, b]));
 const inbox = csv('evidence.csv');
 
-function run(breakId, aiText, evidence = inbox) {
+function run(breakId, aiText, evidence = inbox, outbox = []) {
   const b = breaks[breakId];
   const $ = name => ({
     'Build the question': { all: () => [{ json: { run_id: 'test', break: b } }], first: () => ({ json: { run_id: 'test', break: b } }) },
     'Evidence inbox': { all: () => evidence.map(e => ({ json: e })) },
+    'Chasers already out': { all: () => outbox.map(o => ({ json: o })) },
   })[name];
   const $input = { all: () => [{ json: { content: [{ type: 'text', text: aiText }] } }] };
   return new Function('$', '$input', code)($, $input)[0].json;
@@ -43,17 +44,19 @@ const CASES = [
   { name: 'Agent writes the amount with a thousands comma (4,750.00)', break: 'B6', ai: ai([item('R-1', REPLY, '4,750.00')]), evidence: [...inbox, { evidence_id: 'R-1', body: REPLY }], expect: 'R5' },
   { name: 'Duplicate reply (same message twice)', break: 'B6', ai: ai([item('R-1', REPLY, '4750.00'), item('R-2', REPLY, '4750.00')]), evidence: [...inbox, { evidence_id: 'R-1', body: REPLY }, { evidence_id: 'R-2', body: REPLY }], expect: 'R5' },
   { name: 'Reply about another payment, agent includes it for B1', break: 'B1', ai: ai([item('E1', E1, '25.00'), item('R-1', REPLY, '4750.00')]), evidence: [...inbox, { evidence_id: 'R-1', body: REPLY }], expect: 'R5', setAside: 'R-1' },
+  { name: 'Already chased, reply explains nothing: no second automatic chaser', break: 'B8', ai: ai([item('E8', 'Charges of EUR 25.00 have been deducted from incoming payment ASH-77355 credited to account GGF-EUR-001 on 8 October 2026.', '25.00')]), outbox: [{ break_id: 'B8', status: 'sent' }], expect: 'R3', noChaser: true, who: 'human_only' },
   { name: 'Excess with a supported explanation still needs sign-off', break: 'B4', ai: ai([item('E4', 'We sent EUR 50000.00 under ASH-77318 to account GGF-EUR-001 twice in error on 8 October 2026.', '50000.00')]), expect: 'R4' },
 ];
 
 let pass = 0;
 for (const c of CASES) {
-  const r = run(c.break, c.ai, c.evidence);
+  const r = run(c.break, c.ai, c.evidence, c.outbox);
   const fails = [];
   if (r.rung !== c.expect) fails.push(`rung ${r.rung}, expected ${c.expect}`);
   if (c.check && !(r.failed_check || '').includes(c.check)) fails.push(`failed_check "${r.failed_check}", expected ${c.check}`);
   if (c.noChaser && r.chaser) fails.push('a chaser was drafted');
   if (c.chaser != null && (!r.chaser || r.chaser.amount_eur !== c.chaser)) fails.push(`chaser ${r.chaser && r.chaser.amount_eur}, expected ${c.chaser}`);
+  if (c.who && r.who_acts !== c.who) fails.push(`who ${r.who_acts}, expected ${c.who}`);
   if (c.setAside && r.set_aside !== c.setAside) fails.push(`set aside "${r.set_aside}", expected ${c.setAside}`);
   const ok = fails.length === 0;
   if (ok) pass++;
