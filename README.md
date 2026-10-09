@@ -108,12 +108,11 @@ What the testing found:
 
 ## Scope
 
-**What it is:** a working demo of investigating and chasing cash breaks, with every decision made by a person.
+**What it is:** a working demo of investigating and chasing cash breaks, with every decision made by a person. It is not a production system. It runs on clean test data, is not connected to real banks or email. For testing purposes. 
 
 **Example:** EUR 25.00 short on payment ASH-77310. By hand: search the inbox, find the bank notice, check it, record it, around 15 minutes (estimate). Here: the reviewer sees the quoted bank notice and the checks it passed, and approves it in under a minute.
 
 **Limits:**
-- All data is synthetic. Nothing about real clients, funds, people, or Addetto's work.
-- The test messages are clean on purpose. Real bank notices and emails are messier, which is the hard part this does not yet solve.
+- All data is synthetic. Nothing about real clients, funds, people.
 - The AI is scored, not trusted. Every miss is in `verification.md`.
 - Rob has not worked in fund operations.
