@@ -1,129 +1,119 @@
-# The Break Chaser
+# Cash Break Investigation
 
-Investigating a cash reconciliation break usually means chasing someone: the bank, the custodian, the broker. Read the thread, chase, wait, chase again. Build to send to Karl in relation to Addetto.
+When a fund's cash does not match the bank, someone has to work out why: search the emails and bank notices, check the right payment, and chase the bank or counterparty when nothing explains it. Built to send to Karl in relation to Addetto. 
 
-The Break Chaser is a small version of that loop, built in n8n to understand the problem properly. An agent reads the evidence behind each break and reports what it found, quoting the line it relied on. Rules check the agent. Where there is no evidence, it drafts a chaser. A person approves anything that leaves the system, every decision is logged, and approved decisions are kept as precedents for the next similar break.
-
-**The rules set the route. A person decides.**
+This is a small, working version of that loop, built in n8n. An AI reads the messages behind each break and quotes the line that explains it. Rules check that quote against the message itself. Where nothing explains the break, a chaser is drafted. A person approves every decision and every chaser, with a reason, and anything that sends money back needs a manual sign-off.
 
 ![The whole workflow in n8n](screenshots/00-whole-workflow.png)
 
+## One break, start to finish
+
+The fund expected EUR 25,000.00 from Ashcombe Partners under payment ASH-77412. EUR 20,250.00 arrived.
+
+1. **Investigation.** The AI reads every message in the inbox. None mentions ASH-77412, so nothing explains the EUR 4,750.00 gap.
+2. **Routing.** With no evidence, the rules route the break to a chaser. A query to Ashcombe is drafted, not sent.
+3. **Approval.** A reviewer approves the chaser, with a reason.
+4. **Reply.** Ashcombe replies that EUR 4,750.00 was netted against an open invoice. The break is re-investigated with the reply in the inbox.
+5. **Check.** The AI quotes the reply. The rules confirm the payment reference, the account and the amount all appear in it.
+6. **Decision.** The reviewer sees the quote and its source, approves it with a reason, and the break is closed. The decision is saved, so the next similar break shows how this one was resolved.
+
 ## Walk-through
 
-**1. Get ready.** The right answers are written down first, so the work can be marked later. Then the money that does not add up, and every message about it.
+**1. Load.** Expected results, open breaks, the evidence inbox, and any chasers already sent.
 
-![Get ready](screenshots/01-get-ready.png)
+![Load](screenshots/01-get-ready.png)
 
-**2. The AI reads.** Claude reads every message and copies out the exact words that explain each problem. It does not decide anything.
+**2. Read the evidence.** The AI quotes the line in each message that explains the break. It does not decide.
 
-![The AI reads](screenshots/02-the-ai-reads.png)
+![Read the evidence](screenshots/02-the-ai-reads.png)
 
-**3. Double check.** Simple rules check the AI got it right: same amount, same account, same payment, words copied exactly. Then they decide who deals with it.
+**3. Check and route.** Rules confirm the amount, account, reference and date against the message itself, then route the break: to a reviewer, to a person only, or to a drafted chaser.
 
-![Double check](screenshots/03-double-check.png)
+![Check and route](screenshots/03-double-check.png)
 
-**4. Write it down.** Mark the work against the right answers, save what was found, and draft a message if something is missing. Nothing is sent.
+**4. Record.** Proposals, the audit trail and chaser drafts are saved, and the run is scored against the expected results.
 
-![Write it down](screenshots/04-write-it-down.png)
+![Record](screenshots/04-write-it-down.png)
 
-**A reply comes back.** The answer joins the pile and the AI reads that one problem again.
+**Counterparty reply.** A reply goes into the inbox and that break is re-investigated.
 
-![A reply comes back](screenshots/05-a-reply-comes-back.png)
+![Counterparty reply](screenshots/05-a-reply-comes-back.png)
 
-**5. A person decides.** Only sensible options are offered, and a reason is required.
+**5. Review.** The reviewer sees the evidence, the check results and any earlier decision on a similar break. Only the decisions that fit the case are offered, and a reason is required.
 
-![A person decides](screenshots/06-a-person-decides.png)
+![Review](screenshots/06-a-person-decides.png)
 
-**6. Keep a record.** Who decided what, and why, so anyone can check it later.
+**6. Audit trail.** Every decision is logged with who made it, why, and the status before and after.
 
-![Keep a record](screenshots/07-keep-a-record.png)
+![Audit trail](screenshots/07-keep-a-record.png)
 
-**7. What happens next.** An approved message is marked as sent. Good decisions are saved, so the next similar problem shows what was done before.
+**7. Follow-through.** Approved chasers are marked sent. Approved decisions are kept for the next similar break.
 
-![What happens next](screenshots/08-what-happens-next.png)
+![Follow-through](screenshots/08-what-happens-next.png)
+
+## How a break is routed
+
+| Situation | Who acts |
+|---|---|
+| No evidence found | A chaser is drafted. A person approves the send |
+| The evidence contradicts itself | A person only |
+| The AI's answer fails a check, or cites a message that does not exist | A person only, with the failed check shown |
+| The evidence explains only part of the gap | A chaser is drafted for the rest. A person approves the send |
+| Resolving it sends money back or out | Manual sign-off |
+| Fully supported by the evidence | A reviewer approves, amends or overrides, with a reason |
+
+A break that has already been chased does not get a second automatic chaser. The follow-up goes to a person.
 
 ## What each box on the canvas does
 
-| Box | In plain words |
+| Box | What it does |
 |---|---|
-| Run investigation | The start button |
-| Answer key (loaded first) | The right answers, written before any data existed, loaded first so every run can be marked |
-| Evidence inbox | Every message about the money: bank notices, statement notes, emails, replies |
-| Chasers already out | Messages already drafted or sent, so nobody gets chased twice for the same thing |
-| Open breaks | The money that does not add up and still needs looking at |
-| Build the question | Puts one problem and the whole inbox in front of the AI |
-| The agent reads the evidence | Claude reads the inbox and copies out what each relevant message says, word for word |
-| Rules check the agent + step-in ladder | Checks the AI's answer against the message itself, then decides who deals with it |
-| Score against the answer key, Save scorecard | Marks the run against the right answers |
-| Save proposals, Log to audit trail, Mark break investigated | Saves what was found, logs it, and marks the problem as looked at |
-| Needs a chaser?, Draft chaser (not sent) | Drafts a message when something is missing. A person approves before anything goes |
-| Reviewer: open a break | The form where a person picks a problem to review |
-| Latest proposal, Precedent | Pulls up what was found, and what was decided last time on a similar problem |
-| Decide | The page where the person chooses what to do and says why |
-| Record decision on proposal, Update break status, Log decision to audit trail, Decision logged | Writes the decision down everywhere it needs to go |
-| What happens next, Mark chaser sent, Save precedent | Marks an approved message as sent, and saves good decisions for next time |
-| Counterparty reply, Add reply to evidence inbox, Reopen the break | The other side answers, the answer joins the inbox, and the problem is looked at again |
+| Run investigation | Starts a run |
+| Answer key (loaded first) | Expected results, written before any data existed, so every run can be scored |
+| Evidence inbox | Bank notices, statement notes, emails and replies |
+| Chasers already out | Chasers already drafted or sent, so nobody is chased twice |
+| Open breaks | Breaks still to be investigated |
+| Build the question | Puts one break and the whole inbox in front of the AI |
+| The agent reads the evidence | The AI quotes what each relevant message says, word for word |
+| Rules check the agent + step-in ladder | Checks the AI's answer against the message itself, then routes the break |
+| Score against the answer key, Save scorecard | Scores the run against the expected results |
+| Save proposals, Log to audit trail, Mark break investigated | Saves the findings, logs them, and updates the break status |
+| Needs a chaser?, Draft chaser (not sent) | Drafts a chaser where evidence is missing |
+| Reviewer: open a break | The form where a reviewer picks a break |
+| Latest proposal, Precedent | Loads the findings and the last decision on a similar break |
+| Decide | The reviewer chooses what to do and gives a reason |
+| Record decision on proposal, Update break status, Log decision to audit trail, Decision logged | Records the decision everywhere it needs to go |
+| What happens next, Mark chaser sent, Save precedent | Marks approved chasers sent and keeps the decision for next time |
+| Counterparty reply, Add reply to evidence inbox, Reopen the break | Adds a reply to the inbox and re-investigates that break |
 
-## What it does
+## Testing
 
-Three lanes in one n8n workflow:
-
-| Lane | Trigger | What happens |
-|---|---|---|
-| 1. Investigate | Run by hand | Loads the answer key first, then the open breaks, the evidence inbox and any chasers already out. Claude reads the inbox for each break and extracts what each relevant message says. The rules check every quote, account, reference, amount and date against the message itself, then the step-in ladder decides who acts. Results go to proposals, the audit log, chaser drafts and the scorecard |
-| 2. Review | A two-page form | Pick a break by counterparty, reference and amount. Page 2 shows what it looks like, the rule that fired and why, what the agent found, the quoted evidence, the real sources, and any precedent. Only the decisions that fit the rule are offered, and a reason is required |
-| 3. Counterparty reply | A form | Play the bank or counterparty. The reply goes into the inbox, the break reopens, and lane 1 re-reads that break only |
-
-## The step-in ladder
-
-First match wins. The rung that fired travels with the break into the audit log.
-
-| Rung | Fires when | Who acts |
-|---|---|---|
-| R0 | No evidence found | Agent drafts a chaser, a person approves the send |
-| R1 | The evidence contradicts itself | A person only |
-| R2 | The agent's answer fails a rule check, cites a message that does not exist, or cannot be read | A person only, with the failed check shown |
-| R3 | The evidence explains only part of the gap | Chaser drafted for the rest, a person approves the send |
-| R4 | Resolving it sends money back or out of the account | Manual sign-off, whatever the agent says |
-| R5 | Fully supported by the evidence | Reviewer approves, amends or overrides, with a reason |
-
-A break that already has a chaser out does not get a second automatic one. The follow-up goes to a person.
-
-## The test data
-
-Eight planted breaks on a fictional fund cash account, each written to test one thing: a bank charge, an FX difference, a value date moved to the next day, a payment received twice, two messages that disagree, a break with no evidence at all, a decoy notice with the right amount on the wrong account, and a charge that explains only part of the gap. Details in `design/breaks.md`. Break types checked against public sources, listed there.
-
-## What testing found
-
-Every test was scored against expected results committed to git before it ran. Full record in `verification.md`.
+Eight test breaks on a fictional fund cash account, each built to test one case: a bank charge, an FX difference, a delayed value date, a duplicate payment, conflicting messages, no evidence at all, a notice with the right amount on the wrong account, and a charge that explains only part of the gap. Every test was scored against expected results committed to git before it ran. Full record in `verification.md`.
 
 | Test | Result |
 |---|---|
-| Run 1 | 5 of 8 |
-| Run 2, after three fixes | 8 of 8 |
-| Break-it pass 1 (hand-written agent answers) | 8 of 10 |
-| Break-it pass 3, after fixes | 11 of 11 |
-| Final run, all three lanes by hand | 10 of 10 |
+| First run | 5 of 8 |
+| Second run, after three fixes | 8 of 8 |
+| Rule tests with hand-written AI answers, first pass | 8 of 10 |
+| Rule tests, final pass | 11 of 11 |
+| Final run, every step by hand | 10 of 10 |
 
-Five things worth knowing, all found by the tests, not designed in up front:
+What the testing found:
 
-1. **A failure looked like "no evidence".** Cut-off agent answers fell through to "draft a chaser". Unreadable output now goes to a person.
-2. **A vague question got a vague answer.** Asked for "the amount", the agent gave the payment total. The rules caught it; the prompt was mine to fix.
-3. **The agent reaches.** Even after fixes it pulled in messages about other payments on 2 of 8 breaks. The rules, not the agent, kept them out.
-4. **A fix created a new hole.** The rule that set aside other payments also hid an invented source. The break-it pass found it; only a message that exists can now be set aside.
-5. **The agent's prose is the one thing the rules do not check.** It named the wrong sender for a reply. Decisions never rest on that sentence, and the review page now shows each source's real sender from the inbox.
+1. **A failure looked like "no evidence".** When the AI's answer was cut off, the break fell through to a chaser. Unreadable answers now go to a person.
+2. **A vague question got a vague answer.** Asked for "the amount", the AI gave the payment total. The rules caught it, and the question was fixed.
+3. **The AI reaches.** It pulled in messages about other payments on 2 of 8 breaks. The rules kept them out.
+4. **A fix created a new gap.** The rule that set aside other payments also hid a source the AI had invented. The rule tests caught it.
+5. **The AI's summary is the one part the rules do not check.** It named the wrong sender for a reply once. No decision rests on that sentence, and the review page shows each source's real sender.
 
-## Honest scope
+## Scope
 
-**What it is:** a working n8n demo. An AI reads the messages behind each cash break and quotes the line that explains it. Rules check that quote. A person makes every decision, and money going out always needs sign-off.
+**What it is:** a working demo of investigating and chasing cash breaks, with every decision made by a person.
 
-**Why:** finding a break is automated. Explaining and chasing it is still done by hand.
-
-**Example:** EUR 25.00 short on payment ASH-77310. By hand: search the inbox, find the bank notice, check it, write it up, about 15 minutes. Here: the reviewer sees the quote and approves it in under a minute.
-
-**Possible saving (assumption, not measured):** 40 breaks a day, half explained automatically, 18 minutes saved on each. That is about 6 hours a day, or roughly EUR 45,000 a year at EUR 60,000 per analyst.
+**Example:** EUR 25.00 short on payment ASH-77310. By hand: search the inbox, find the bank notice, check it, record it, around 15 minutes (estimate). Here: the reviewer sees the quoted bank notice and the checks it passed, and approves it in under a minute.
 
 **Limits:**
-- All data is synthetic. Nothing about real clients, funds or Addetto's work.
+- All data is synthetic. Nothing about real clients, funds, people, or Addetto's work.
+- The test messages are clean on purpose. Real bank notices and emails are messier, which is the hard part this does not yet solve.
 - The AI is scored, not trusted. Every miss is in `verification.md`.
 - Rob has not worked in fund operations.
