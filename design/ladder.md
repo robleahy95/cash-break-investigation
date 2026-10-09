@@ -24,3 +24,8 @@ Who acts on each break. Read top to bottom, first match wins. The rung that fire
 2. The amount the agent reads equals the break amount within EUR 0.01 (or, for R3, is less than it).
 3. The account reference in the evidence matches the break's reference.
 4. Any date in the evidence falls inside the window: the break date or the next business day.
+
+## Changes after run 1 (9 Oct 2026, 13:30, answer key unchanged)
+
+- **Unreadable agent output is R2**, never R0. In run 1 three answers were cut off and fell through to "no evidence". A failure must not look like an empty inbox.
+- **A message about a different payment reference is set aside and logged**, not escalated. The reference is the key. A message with the right reference but a wrong detail (B7) still fails the checks and goes to a person.

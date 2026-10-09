@@ -26,6 +26,6 @@ ${inbox}
 Find every message in the inbox that appears to relate to this break, even if some details in it differ from the break. For each one, report what the message itself says, exactly as written. Do not correct or reconcile anything.
 
 Return JSON only, no other text:
-{"items":[{"evidence_id":"E?","quote":"the exact sentence from the message that explains the break, copied word for word","amount_eur":0.00,"account_ref":"as written in the message","payment_ref":"as written in the message","value_date":"YYYY-MM-DD if the message gives a new value date, otherwise null","category":"bank_charge | fx_difference | timing | duplicate | commission | other"}],"explanation":"one plain sentence"}
+{"items":[{"evidence_id":"E?","quote":"the exact sentence from the message that explains the break, copied word for word","amount_eur":"the amount in the message that accounts for the break (the difference, charge or delayed amount), not the payment total unless the whole payment is the break","account_ref":"as written in the message","payment_ref":"as written in the message","value_date":"YYYY-MM-DD if the message gives a new value date, otherwise null","category":"bank_charge | fx_difference | timing | duplicate | commission | other"}],"explanation":"one plain sentence"}
 If no message relates to this break, return {"items":[],"explanation":"No evidence found"}.`
 }}));

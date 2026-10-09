@@ -35,7 +35,12 @@ $input.all().forEach((aiItem, i) => {
   const window = [b.break_date, nextBusinessDay(b.break_date)];
 
   // Rules check every message the agent relied on. The rules read the message itself, not the agent's summary of it.
-  const checked = items.map(it => {
+  // Fix 3 (run 1): the payment reference is the key. A message about a different payment is not evidence
+  // for this break. It is set aside and logged, not escalated. A message with the right reference but a
+  // wrong detail still fails the checks below and goes to a person.
+  const setAside = items.filter(it => !(byId[it.evidence_id] && byId[it.evidence_id].body.includes(b.payment_ref)));
+  const relevant = items.filter(it => !setAside.includes(it));
+  const checked = relevant.map(it => {
     const ev = byId[it.evidence_id];
     const body = ev ? ev.body : '';
     const fails = [];
@@ -56,7 +61,11 @@ $input.all().forEach((aiItem, i) => {
 
   // The step-in ladder. First match wins.
   let rung, who, status, reason, chaser = null;
-  if (checked.length === 0) {
+  if (ai.parse_error) {
+    // Fix 1 (run 1): an unreadable agent answer is a failed check, never "no evidence".
+    rung = 'R2'; who = 'human_only'; status = 'with_person';
+    reason = 'Agent output could not be read. A person investigates; no chaser is drafted.';
+  } else if (checked.length === 0) {
     rung = 'R0'; who = 'chaser_then_human'; status = 'chaser_drafted';
     reason = 'No evidence found for this break. Chaser drafted; a person approves the send.';
     chaser = Number(b.break_amount_eur);
@@ -88,7 +97,8 @@ $input.all().forEach((aiItem, i) => {
     run_id: runId, break_id: b.break_id, rung, who_acts: who, category, agent_behaviour: behaviour,
     explanation: ai.explanation || '', evidence_ids: checked.map(c => c.evidence_id).join(','),
     quote: first.quote || '', explained_amount_eur: explained, unexplained_amount_eur: chaser != null ? chaser : Math.max(unexplained, 0),
-    checks: JSON.stringify(checked), failed_check: failed.map(f => `${f.evidence_id}:${f.fails.join('|')}`).join('; '),
+    checks: JSON.stringify(checked), failed_check: ai.parse_error ? 'agent_output_unreadable' : failed.map(f => `${f.evidence_id}:${f.fails.join('|')}`).join('; '),
+    set_aside: setAside.map(s => s.evidence_id).join(','),
     status, reason,
     chaser: chaser == null ? null : {
       chaser_id: `${runId}-${b.break_id}`, break_id: b.break_id, to_party: b.counterparty,
