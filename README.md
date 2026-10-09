@@ -4,8 +4,6 @@ Investigating a cash reconciliation break usually means chasing someone: the ban
 
 The Break Chaser is a small version of that loop, built in n8n to understand the problem properly. An agent reads the evidence behind each break and proposes an explanation, quoting the line it relied on. Rules check the agent. Where there is no evidence, it drafts a chaser. A person approves anything that leaves the system, and every decision is logged.
 
-Built by Rob Leahy, 9 October 2026, in relation to what Addetto (https://addetto.ai) is solving. Work in progress.
-
 ## Honest scope
 
 - **All data is synthetic.** A fictional fund cash account and fictional counterparties. Nothing here is about any real client, fund, person, or about Addetto's own work.
