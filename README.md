@@ -1,12 +1,88 @@
 # The Break Chaser
 
-Investigating a cash reconciliation break usually means chasing someone: the bank, the custodian, the broker. Read the thread, chase, wait, chase again. Addetto names this pain on its homepage: operations teams spend too much time "checking outputs and reconstructing context."
+Investigating a cash reconciliation break usually means chasing someone: the bank, the custodian, the broker. Read the thread, chase, wait, chase again. Addetto names this pain on its homepage: operations teams spend too much time "checking outputs and reconstructing context" (https://addetto.ai).
 
-The Break Chaser is a small version of that loop, built in n8n to understand the problem properly. An agent reads the evidence behind each break and proposes an explanation, quoting the line it relied on. Rules check the agent. Where there is no evidence, it drafts a chaser. A person approves anything that leaves the system, and every decision is logged.
+The Break Chaser is a small version of that loop, built in n8n to understand the problem properly. An agent reads the evidence behind each break and reports what it found, quoting the line it relied on. Rules check the agent. Where there is no evidence, it drafts a chaser. A person approves anything that leaves the system, every decision is logged, and approved decisions are kept as precedents for the next similar break.
+
+**The rules set the route. A person decides.**
+
+## What it does
+
+Three lanes in one n8n workflow:
+
+| Lane | Trigger | What happens |
+|---|---|---|
+| 1. Investigate | Run by hand | Loads the answer key first, then the open breaks, the evidence inbox and any chasers already out. Claude reads the inbox for each break and extracts what each relevant message says. The rules check every quote, account, reference, amount and date against the message itself, then the step-in ladder decides who acts. Results go to proposals, the audit log, chaser drafts and the scorecard |
+| 2. Review | A two-page form | Pick a break by counterparty, reference and amount. Page 2 shows what it looks like, the rule that fired and why, what the agent found, the quoted evidence, the real sources, and any precedent. Only the decisions that fit the rule are offered, and a reason is required |
+| 3. Counterparty reply | A form | Play the bank or counterparty. The reply goes into the inbox, the break reopens, and lane 1 re-reads that break only |
+
+## The step-in ladder
+
+First match wins. The rung that fired travels with the break into the audit log.
+
+| Rung | Fires when | Who acts |
+|---|---|---|
+| R0 | No evidence found | Agent drafts a chaser, a person approves the send |
+| R1 | The evidence contradicts itself | A person only |
+| R2 | The agent's answer fails a rule check, cites a message that does not exist, or cannot be read | A person only, with the failed check shown |
+| R3 | The evidence explains only part of the gap | Chaser drafted for the rest, a person approves the send |
+| R4 | Resolving it sends money back or out of the account | Manual sign-off, whatever the agent says |
+| R5 | Fully supported by the evidence | Reviewer approves, amends or overrides, with a reason |
+
+A break that already has a chaser out does not get a second automatic one. The follow-up goes to a person.
+
+## The test data
+
+Eight planted breaks on a fictional fund cash account, each written to test one thing: a bank charge, an FX difference, a value date moved to the next day, a payment received twice, two messages that disagree, a break with no evidence at all, a decoy notice with the right amount on the wrong account, and a charge that explains only part of the gap. Details in `design/breaks.md`. Break types checked against public sources, listed there.
+
+## What testing found
+
+Every test was scored against expected results committed to git before it ran. Full record in `verification.md`.
+
+| Test | Result |
+|---|---|
+| Run 1 | 5 of 8 |
+| Run 2, after three fixes | 8 of 8 |
+| Break-it pass 1 (hand-written agent answers) | 8 of 10 |
+| Break-it pass 3, after fixes | 11 of 11 |
+| Final run, all three lanes by hand | 10 of 10 |
+
+Five things worth knowing, all found by the tests, not designed in up front:
+
+1. **A failure looked like "no evidence".** Cut-off agent answers fell through to "draft a chaser". Unreadable output now goes to a person.
+2. **A vague question got a vague answer.** Asked for "the amount", the agent gave the payment total. The rules caught it; the prompt was mine to fix.
+3. **The agent reaches.** Even after fixes it pulled in messages about other payments on 2 of 8 breaks. The rules, not the agent, kept them out.
+4. **A fix created a new hole.** The rule that set aside other payments also hid an invented source. The break-it pass found it; only a message that exists can now be set aside.
+5. **The agent's prose is the one thing the rules do not check.** It named the wrong sender for a reply. Decisions never rest on that sentence, and the review page now shows each source's real sender from the inbox.
 
 ## Honest scope
 
 - **All data is synthetic.** A fictional fund cash account and fictional counterparties. Nothing here is about any real client, fund, person, or about Addetto's own work.
-- **The AI's outputs are scored, not trusted.** An answer key was written and committed before any data existed, and the misses are published.
-- **Who did what:** Rob designed the breaks, the step-in ladder and the rule checks, and checked every result. Claude Code built the workflows through the n8n MCP.
+- **The AI's outputs are scored, not trusted.** The answer key was committed before any data existed, and every miss is published.
+- **Who did what:** Rob designed the breaks, the step-in ladder, the rule checks and the money-out rule, tested every lane by hand and found two of the problems listed above. Claude Code built the workflows through the n8n MCP and wrote the code.
 - Rob has not worked in fund operations. The closest he has: reconciliation reporting at Utmost, and bank statement flows at SAP. This is not a copy of Addetto's product.
+- **Known gaps:** a draft chaser is not cancelled when its break closes, and the agent's prose can still mislead a reader. Both are in `output/final_run.md`.
+
+## How to run it
+
+1. Import `workflow/the-break-chaser.n8n.json` and `workflow/reset-demo.n8n.json` into n8n, and create the tables from `data/` and `design/answer_key.csv` (steps in `workflow/README.md`).
+2. Run **Break Chaser: reset demo**.
+3. In **The Break Chaser**, start each lane from its own trigger: Run investigation, then the review form, then the reply form.
+4. Rules only, no n8n: `node tests/break_it.js`.
+
+## What is in this repo
+
+| Path | What |
+|---|---|
+| `design/` | The planted breaks, the step-in ladder (with every change and why), the answer key |
+| `data/` | The synthetic breaks and evidence inbox |
+| `workflow/` | n8n exports, the rules code, the scoring code |
+| `tests/` | The break-it cases |
+| `output/` | Every run and test pass, as recorded |
+| `verification.md` | All of it in one place |
+
+## Next
+
+- Cancel a draft chaser when its break closes.
+- Real procedures and tolerances from a client's operations expert, in place of the ones written for this test.
+- A second chase as a person's step with a drafted follow-up, rather than a hand-over with nothing drafted.
