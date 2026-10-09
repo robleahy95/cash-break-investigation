@@ -6,6 +6,42 @@ The Break Chaser is a small version of that loop, built in n8n to understand the
 
 **The rules set the route. A person decides.**
 
+![The whole workflow in n8n](screenshots/00-whole-workflow.png)
+
+## Walk-through
+
+**1. Get ready.** The right answers are written down first, so the work can be marked later. Then the money that does not add up, and every message about it.
+
+![Get ready](screenshots/01-get-ready.png)
+
+**2. The AI reads.** Claude reads every message and copies out the exact words that explain each problem. It does not decide anything.
+
+![The AI reads](screenshots/02-the-ai-reads.png)
+
+**3. Double check.** Simple rules check the AI got it right: same amount, same account, same payment, words copied exactly. Then they decide who deals with it.
+
+![Double check](screenshots/03-double-check.png)
+
+**4. Write it down.** Mark the work against the right answers, save what was found, and draft a message if something is missing. Nothing is sent.
+
+![Write it down](screenshots/04-write-it-down.png)
+
+**A reply comes back.** The answer joins the pile and the AI reads that one problem again.
+
+![A reply comes back](screenshots/05-a-reply-comes-back.png)
+
+**5. A person decides.** Only sensible options are offered, and a reason is required.
+
+![A person decides](screenshots/06-a-person-decides.png)
+
+**6. Keep a record.** Who decided what, and why, so anyone can check it later.
+
+![Keep a record](screenshots/07-keep-a-record.png)
+
+**7. What happens next.** An approved message is marked as sent. Good decisions are saved, so the next similar problem shows what was done before.
+
+![What happens next](screenshots/08-what-happens-next.png)
+
 ## What it does
 
 Three lanes in one n8n workflow:

@@ -1366,6 +1366,134 @@
    "id": "chasers-already-out",
    "executeOnce": true,
    "alwaysOutputData": true
+  },
+  {
+   "parameters": {
+    "content": "## 1. Get ready\nFirst we write down the right answers, so we can mark our work later. Then we pick up the money that does not add up, and all the messages about it.",
+    "width": 1260,
+    "height": 390,
+    "color": 5
+   },
+   "id": "section-0",
+   "name": "Section: start and load",
+   "type": "n8n-nodes-base.stickyNote",
+   "typeVersion": 1,
+   "position": [
+    -60,
+    -160
+   ]
+  },
+  {
+   "parameters": {
+    "content": "## 2. The AI reads\nThe AI reads every message and copies out the exact words that explain each problem. It does not decide anything.",
+    "width": 700,
+    "height": 390,
+    "color": 6
+   },
+   "id": "section-1",
+   "name": "Section: the agent reads",
+   "type": "n8n-nodes-base.stickyNote",
+   "typeVersion": 1,
+   "position": [
+    1236,
+    -160
+   ]
+  },
+  {
+   "parameters": {
+    "content": "## 3. Double check\nSimple rules check the AI got it right: same amount, same account, same payment. Then they decide who deals with it.",
+    "width": 320,
+    "height": 390,
+    "color": 3
+   },
+   "id": "section-2",
+   "name": "Section: rules and ladder",
+   "type": "n8n-nodes-base.stickyNote",
+   "typeVersion": 1,
+   "position": [
+    1940,
+    -160
+   ]
+  },
+  {
+   "parameters": {
+    "content": "## 4. Write it down\nMark the work against the right answers. Save what was found. If something is missing, write a message asking for it. Nothing is sent yet.",
+    "width": 780,
+    "height": 830,
+    "color": 4
+   },
+   "id": "section-3",
+   "name": "Section: outputs",
+   "type": "n8n-nodes-base.stickyNote",
+   "typeVersion": 1,
+   "position": [
+    2276,
+    -400
+   ]
+  },
+  {
+   "parameters": {
+    "content": "## A reply comes back\nSomeone answers our message. Their answer goes in the pile, and the AI reads that one problem again.",
+    "width": 760,
+    "height": 322,
+    "color": 2
+   },
+   "id": "section-4",
+   "name": "Section: counterparty reply",
+   "type": "n8n-nodes-base.stickyNote",
+   "typeVersion": 1,
+   "position": [
+    -524,
+    240
+   ]
+  },
+  {
+   "parameters": {
+    "content": "## 5. A person decides\nA person looks at what was found and picks what to do. They can only pick sensible options, and they have to say why.",
+    "width": 1006,
+    "height": 350,
+    "color": 1
+   },
+   "id": "section-5",
+   "name": "Section: open and decide",
+   "type": "n8n-nodes-base.stickyNote",
+   "typeVersion": 1,
+   "position": [
+    242,
+    510
+   ]
+  },
+  {
+   "parameters": {
+    "content": "## 6. Keep a record\nWe write down who decided what, and why, so anyone can check it later.",
+    "width": 988,
+    "height": 350,
+    "color": 7
+   },
+   "id": "section-6",
+   "name": "Section: record the decision",
+   "type": "n8n-nodes-base.stickyNote",
+   "typeVersion": 1,
+   "position": [
+    1332,
+    510
+   ]
+  },
+  {
+   "parameters": {
+    "content": "## 7. What happens next\nIf the person said yes to a message, it is marked as sent. Good decisions are saved, so next time a similar problem shows up, the person sees what was done before.",
+    "width": 620,
+    "height": 480,
+    "color": 6
+   },
+   "id": "section-7",
+   "name": "Section: what happens next",
+   "type": "n8n-nodes-base.stickyNote",
+   "typeVersion": 1,
+   "position": [
+    2404,
+    450
+   ]
   }
  ]
 }
