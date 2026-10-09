@@ -1,0 +1,13 @@
+import { workflow, node, trigger } from '@n8n/workflow-sdk';
+
+const start = trigger({ type: 'n8n-nodes-base.manualTrigger', version: 1, config: { name: 'Reset the demo', position: [0, 0] } });
+const c1 = node({ type: 'n8n-nodes-base.dataTable', version: 1.1, config: { name: 'Clear proposals', position: [240, 0], executeOnce: true, parameters: { resource: 'table', operation: 'clear', dataTableId: { __rl: true, mode: 'id', value: 'J5dzcHqmCoe9XgPX' } } } });
+const c2 = node({ type: 'n8n-nodes-base.dataTable', version: 1.1, config: { name: 'Clear chaser outbox', position: [480, 0], executeOnce: true, parameters: { resource: 'table', operation: 'clear', dataTableId: { __rl: true, mode: 'id', value: '8CUaVo5g8InAFMKI' } } } });
+const c3 = node({ type: 'n8n-nodes-base.dataTable', version: 1.1, config: { name: 'Clear audit trail', position: [720, 0], executeOnce: true, parameters: { resource: 'table', operation: 'clear', dataTableId: { __rl: true, mode: 'id', value: 'AaZe22QfVwpzjZmW' } } } });
+const c4 = node({ type: 'n8n-nodes-base.dataTable', version: 1.1, config: { name: 'Clear precedents', position: [960, 0], executeOnce: true, parameters: { resource: 'table', operation: 'clear', dataTableId: { __rl: true, mode: 'id', value: 'JRznDPCV8VdthTnp' } } } });
+const c5 = node({ type: 'n8n-nodes-base.dataTable', version: 1.1, config: { name: 'Clear scorecard', position: [1200, 0], executeOnce: true, parameters: { resource: 'table', operation: 'clear', dataTableId: { __rl: true, mode: 'id', value: 'NNu95y5lb4iSoKSP' } } } });
+const reopenAll = node({ type: 'n8n-nodes-base.dataTable', version: 1.1, config: { name: 'Reopen all breaks', position: [1440, 0], executeOnce: true, alwaysOutputData: true, parameters: { resource: 'row', operation: 'update', dataTableId: { __rl: true, mode: 'id', value: 'piEGNCjRV2gJGLha' }, matchType: 'allConditions', filters: { conditions: [ { keyName: 'status', condition: 'neq', keyValue: 'open' } ] }, columns: { mappingMode: 'defineBelow', value: { status: 'open' }, schema: [ { id: 'status', displayName: 'status', required: false, defaultMatch: false, display: true, type: 'string', canBeUsedToMatch: true } ] } } } });
+const dropReplies = node({ type: 'n8n-nodes-base.dataTable', version: 1.1, config: { name: 'Remove replies from inbox', position: [1680, 0], executeOnce: true, alwaysOutputData: true, parameters: { resource: 'row', operation: 'deleteRows', dataTableId: { __rl: true, mode: 'id', value: '1FlrgvIrSvuo6bET' }, matchType: 'allConditions', filters: { conditions: [ { keyName: 'evidence_id', condition: 'like', keyValue: 'R-%' } ] } } } });
+
+export default workflow('break-chaser-reset', 'Break Chaser: reset demo')
+  .add(start).to(c1).to(c2).to(c3).to(c4).to(c5).to(reopenAll).to(dropReplies);
