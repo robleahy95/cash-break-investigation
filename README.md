@@ -115,32 +115,15 @@ Five things worth knowing, all found by the tests, not designed in up front:
 
 ## Honest scope
 
-- **All data is synthetic.** A fictional fund cash account and fictional counterparties. Nothing here is about any real client, fund, person, or about Addetto's own work.
-- **The AI's outputs are scored, not trusted.** The answer key was committed before any data existed, and every miss is published.
-- **Who did what:** Rob designed the breaks, the step-in ladder, the rule checks and the money-out rule, tested every lane by hand and found two of the problems listed above. Claude Code built the workflows through the n8n MCP and wrote the code.
-- Rob has not worked in fund operations. The closest he has: reconciliation reporting at Utmost, and bank statement flows at SAP. This is not a copy of Addetto's product.
-- **Known gaps:** a draft chaser is not cancelled when its break closes, and the agent's prose can still mislead a reader. Both are in `output/final_run.md`.
+**What it is:** a working n8n demo. An AI reads the messages behind each cash break and quotes the line that explains it. Rules check that quote. A person makes every decision, and money going out always needs sign-off.
 
-## How to run it
+**Why:** finding a break is automated. Explaining and chasing it is still done by hand.
 
-1. Import `workflow/the-break-chaser.n8n.json` and `workflow/reset-demo.n8n.json` into n8n, and create the tables from `data/` and `design/answer_key.csv` (steps in `workflow/README.md`).
-2. Run **Break Chaser: reset demo**.
-3. In **The Break Chaser**, start each lane from its own trigger: Run investigation, then the review form, then the reply form.
-4. Rules only, no n8n: `node tests/break_it.js`.
+**Example:** EUR 25.00 short on payment ASH-77310. By hand: search the inbox, find the bank notice, check it, write it up, about 15 minutes. Here: the reviewer sees the quote and approves it in under a minute.
 
-## What is in this repo
+**Possible saving (assumption, not measured):** 40 breaks a day, half explained automatically, 18 minutes saved on each. That is about 6 hours a day, or roughly EUR 45,000 a year at EUR 60,000 per analyst.
 
-| Path | What |
-|---|---|
-| `design/` | The planted breaks, the step-in ladder (with every change and why), the answer key |
-| `data/` | The synthetic breaks and evidence inbox |
-| `workflow/` | n8n exports, the rules code, the scoring code |
-| `tests/` | The break-it cases |
-| `output/` | Every run and test pass, as recorded |
-| `verification.md` | All of it in one place |
-
-## Next
-
-- Cancel a draft chaser when its break closes.
-- Real procedures and tolerances from a client's operations expert, in place of the ones written for this test.
-- A second chase as a person's step with a drafted follow-up, rather than a hand-over with nothing drafted.
+**Limits:**
+- All data is synthetic. Nothing about real clients, funds or Addetto's work.
+- The AI is scored, not trusted. Every miss is in `verification.md`.
+- Rob has not worked in fund operations.
